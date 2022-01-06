@@ -54,6 +54,21 @@ export default function App() {
     }
   };
 
+  const renderPokemonCards = ({ item }: { item: pokemon }) => {
+    const { image, name, attack, defense, hp, weight } = item;
+
+    return (
+      <View style={styles.card}>
+        <Image source={{ uri: image }} style={{ width: "100%", height: 60 }} />
+        <Text style={styles.cardTitle}>{name}</Text>
+        <Text style={styles.cardStats}>att {attack}</Text>
+        <Text style={styles.cardStats}>dfs {defense}</Text>
+        <Text style={styles.cardStats}>hp {hp}</Text>
+        <Text style={styles.cardStats}>weight {weight}</Text>
+      </View>
+    );
+  };
+
   useEffect(() => {
     fetchData([1, 4, 7, 12, 55]);
   }, []);
@@ -74,43 +89,8 @@ export default function App() {
       <FlatList
         data={pokemons}
         keyExtractor={(item) => item.name}
-        renderItem={({ item }) => {
-          const { image, name, attack, defense, hp, weight } = item;
-
-          return (
-            <View style={styles.card}>
-              <Image
-                source={{ uri: image }}
-                style={{ width: "100%", height: 60 }}
-              />
-              <Text style={styles.cardTitle}>{name}</Text>
-              <Text style={styles.cardStats}>att {attack}</Text>
-              <Text style={styles.cardStats}>dfs {defense}</Text>
-              <Text style={styles.cardStats}>hp {hp}</Text>
-              <Text style={styles.cardStats}>weight {weight}</Text>
-            </View>
-          );
-        }}
+        renderItem={renderPokemonCards}
       />
-      {/* <View>
-        {pokemons.map((pokemon) => {
-          const { image, name, attack, defense, hp, weight } = pokemon;
-
-          return (
-            <View style={styles.card}>
-              <Image
-                source={{ uri: image }}
-                style={{ width: "100%", height: 60 }}
-              />
-              <Text style={styles.cardTitle}>{name}</Text>
-              <Text style={styles.cardStats}>att {attack}</Text>
-              <Text style={styles.cardStats}>dfs {defense}</Text>
-              <Text style={styles.cardStats}>hp {hp}</Text>
-              <Text style={styles.cardStats}>weight {weight}</Text>
-            </View>
-          );
-        })}
-      </View> */}
       <StatusBar style='auto' />
     </View>
   );
