@@ -1,6 +1,14 @@
 import React, { useEffect } from "react";
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, Image, FlatList } from "react-native";
+import {
+  TouchableHighlight,
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  FlatList,
+  Button,
+} from "react-native";
 import axios from "axios";
 
 type pokemon = {
@@ -23,12 +31,20 @@ export default function App() {
   // params.append("name", "charmander")
   // params.append("level", "45")
 
-  const fetchData = async (idList: number[]): Promise<void> => {
+  const fetchData = async (): Promise<void> => {
+    const numberOfPokemons = Math.floor(Math.random() * 9) + 1;
+
+    const pokemonIds = [];
+
+    for (let i = 0; i < numberOfPokemons; i++) {
+      pokemonIds.push(Math.floor(Math.random() * 800));
+    }
+
     try {
       const pokemons: pokemon[] = [];
 
-      for (let i = 0; i < idList.length; i++) {
-        const res = await axios.get(link + idList[i]);
+      for (let i = 0; i < pokemonIds.length; i++) {
+        const res = await axios.get(link + pokemonIds[i]);
 
         const { name, stats, weight, sprites } = res.data;
 
@@ -58,24 +74,29 @@ export default function App() {
     const { image, name, attack, defense, hp, weight } = item;
 
     return (
-      <View style={styles.card}>
-        <Image source={{ uri: image }} style={{ width: "100%", height: 60 }} />
-        <Text style={styles.cardTitle}>{name}</Text>
-        <Text style={styles.cardStats}>att {attack}</Text>
-        <Text style={styles.cardStats}>dfs {defense}</Text>
-        <Text style={styles.cardStats}>hp {hp}</Text>
-        <Text style={styles.cardStats}>weight {weight}</Text>
-      </View>
+      <TouchableHighlight
+        activeOpacity={0.6}
+        underlayColor='#DDDDDD'
+        onPress={() => setPokemons([item])}
+      >
+        <View style={styles.card}>
+          <Image
+            source={{ uri: image }}
+            style={{ width: "100%", height: 60 }}
+          />
+          <Text style={styles.cardTitle}>{name}</Text>
+          <Text style={styles.cardStats}>att {attack}</Text>
+          <Text style={styles.cardStats}>dfs {defense}</Text>
+          <Text style={styles.cardStats}>hp {hp}</Text>
+          <Text style={styles.cardStats}>weight {weight}</Text>
+        </View>
+      </TouchableHighlight>
     );
   };
 
   useEffect(() => {
-    fetchData([1, 4, 7, 12, 55]);
+    fetchData();
   }, []);
-
-  useEffect(() => {
-    console.log(pokemons);
-  }, [pokemons]);
 
   return (
     <View style={styles.container}>
@@ -86,6 +107,9 @@ export default function App() {
         }}
         style={{ width: "100%", height: 300, marginBottom: 30 }}
       />
+      <View style={{ marginBottom: 30 }}>
+        <Button title='Search Pokemon' onPress={fetchData} />
+      </View>
       <FlatList
         data={pokemons}
         keyExtractor={(item) => item.name}
